@@ -1,0 +1,50 @@
+{
+    "name": "Example Band - World Tour",
+    "type": "event",
+    "id": "vvG1zZ9KbqA0Ex",
+    "url": "https://www.ticketmaster.fr/fr/manifestation/example-band-billet/idmanif/000000",
+    "locale": "fr-fr",
+    "sales": {
+        "public": {
+            "startDateTime": "2026-01-15T09:00:00Z",
+            "startTBD": false,
+            "endDateTime": "2099-06-20T18:00:00Z"
+        }
+    },
+    "dates": {
+        "start": {
+            "localDate": "2099-06-20",
+            "localTime": "20:00:00",
+            "dateTime": "2099-06-20T18:00:00Z",
+            "dateTBD": false,
+            "timeTBA": false
+        },
+        "timezone": "Europe/Paris",
+        "status": {
+            "code": "onsale"
+        }
+    },
+    "priceRanges": [
+        {
+            "type": "standard",
+            "currency": "EUR",
+            "min": 45.5,
+            "max": 89.0
+        }
+    ],
+    "_embedded": {
+        "venues": [
+            {
+                "name": "Example Arena",
+                "id": "KovZ9177xxx",
+                "city": {
+                    "name": "Paris"
+                },
+                "country": {
+                    "name": "France",
+                    "countryCode": "FR"
+                }
+            }
+        ]
+    }
+}

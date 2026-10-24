@@ -1,0 +1,52 @@
+{
+    "name": "omniticket/ticketmaster",
+    "type": "library",
+    "description": "Omniticket's Ticketmaster, under any PHP host: public events from the Discovery API (dates, venue, price range, sale status, the purchase link) - a catalogue, read only.",
+    "keywords": [
+        "ticketmaster",
+        "discovery-api",
+        "events",
+        "concerts",
+        "tickets",
+        "framework-agnostic",
+        "omniticket"
+    ],
+    "homepage": "https://github.com/glitchr-studio/omniticket-ticketmaster",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marco Meyer",
+            "email": "marco.meyer@glitchr.io"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "omniscient/omniticket": "^1.0@dev",
+        "symfony/http-client-contracts": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "symfony/http-client": "^6.4|^7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omniticket\\Ticketmaster\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omniticket\\Ticketmaster\\Tests\\": "Tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-1.x": "1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
