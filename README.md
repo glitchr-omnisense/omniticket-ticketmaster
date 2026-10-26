@@ -1,6 +1,6 @@
 # omniticket/ticketmaster
 
-[omniscient/omniticket](https://github.com/glitchr-studio/omniticket)'s Ticketmaster, under any
+[omnisense/omniticket](https://github.com/glitchr-omnisense/omniticket)'s Ticketmaster, under any
 PHP host: public events from the Discovery API - dates, venue, price range, sale status and the
 purchase link. A catalogue, read only: the tickets are Ticketmaster's, bought at the event's
 `url`; there are no attendees and no check.
