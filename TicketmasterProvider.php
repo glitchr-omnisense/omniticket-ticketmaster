@@ -2,6 +2,9 @@
 
 namespace Omniticket\Ticketmaster;
 
+use Omnisense\Contracts\Policy\Backoff;
+use Omnisense\Contracts\Policy\DeclaresUsagePolicyInterface;
+use Omnisense\Contracts\Policy\UsagePolicy;
 use Omniticket\Capabilities;
 use Omniticket\EventCatalogInterface;
 use Omniticket\Http\JsonApi;
@@ -18,8 +21,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * catalogue: no attendee, no check - the tickets are Ticketmaster's, bought
  * at the event's url.
  */
-final class TicketmasterProvider implements EventCatalogInterface
+final class TicketmasterProvider implements EventCatalogInterface, DeclaresUsagePolicyInterface
 {
+    /** Ticketmaster's usage policy, as its terms read on the day it says (provenance.verifiedAt). */
+    public const POLICY = __DIR__.'/policy.json';
+
+    private static ?UsagePolicy $policy = null;
+
     private const SIZE = 50;
 
     /** The Discovery API serves no further than the 1000th result of a search (size x page < 1000). */
@@ -33,8 +41,9 @@ final class TicketmasterProvider implements EventCatalogInterface
         #[\SensitiveParameter] private readonly string $apiKey,
         private readonly array $filters = [],
         private readonly string $url = 'https://app.ticketmaster.com/discovery/v2',
+        ?Backoff $backoff = null,
     ) {
-        $this->api = new JsonApi($http, 'Ticketmaster');
+        $this->api = new JsonApi($http, 'Ticketmaster', $backoff);
     }
 
     public function getName(): string
@@ -47,12 +56,18 @@ final class TicketmasterProvider implements EventCatalogInterface
         return 'Ticketmaster';
     }
 
+    public function usagePolicy(): UsagePolicy
+    {
+        return self::$policy ??= UsagePolicy::fromFile(self::POLICY);
+    }
+
     public function capabilities(): Capabilities
     {
         return new Capabilities(
             catalog: true,
             terms: ['https://developer.ticketmaster.com/support/terms-of-use/'],
             limits: ['default quota: 5,000 calls a day, 5 a second per key', 'deep paging: no further than the 1000th result of a search', 'link to the event\'s url to buy; display and caching follow Ticketmaster\'s terms of use'],
+            policy: $this->usagePolicy(),
         );
     }
 

@@ -96,6 +96,18 @@ no event "9": Resource not found with provided criteria (locale=en-us, id=9)`.
   `ProviderException`, the status as its code.
 - A network failure: `UnreachableException`.
 
+## Usage policy
+
+Declared as data in `policy.json` (omnisense/contracts' schema), read on 2026-11-10: 5,000 calls a
+day and 5 a second per key ([Getting
+started](https://developer.ticketmaster.com/products-and-docs/apis/getting-started/)); commercial
+use forbidden (no revenue from the API, [Terms of
+Use](https://developer.ticketmaster.com/support/terms-of-use/), 2023-06-27), caching allowed for
+reasonable periods, storage beyond it and redistribution forbidden; no attribution in the terms. A
+listing counts one call, its pages are Ticketmaster's calls each. Through omniticket's registry
+every call is checked against it, a 429 holds the next calls, a commercial site is refused at once,
+and a site may tighten it, never loosen it.
+
 ## Verified, and not
 
 `Tests/TicketmasterProviderTest.php`, against answers composed from the fields the API documents,

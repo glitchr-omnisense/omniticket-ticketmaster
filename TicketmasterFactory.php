@@ -49,6 +49,7 @@ final class TicketmasterFactory extends ProviderFactory
             (string) $c->string('api_key'),
             $filters,
             rtrim($c->string('url') ?? 'https://app.ticketmaster.com/discovery/v2', '/'),
+            backoff: $c->backoff(),
         );
     }
 }

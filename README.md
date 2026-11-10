@@ -31,6 +31,18 @@ caching follow Ticketmaster's terms of use.
 
 No maintained PHP client of the Discovery API was found to reuse.
 
+## Usage policy
+
+Declared as data in `policy.json` (omnisense/contracts' schema), read on 2026-11-10: 5,000 calls a
+day and 5 a second per key ([Getting
+started](https://developer.ticketmaster.com/products-and-docs/apis/getting-started/)); commercial
+use forbidden (no revenue from the API, [Terms of
+Use](https://developer.ticketmaster.com/support/terms-of-use/), 2023-06-27), caching allowed for
+reasonable periods, storage beyond it and redistribution forbidden; no attribution in the terms. A
+listing counts one call, its pages are Ticketmaster's calls each. Through omniticket's registry
+every call is checked against it, a 429 holds the next calls, a commercial site is refused at once,
+and a site may tighten it, never loosen it.
+
 ## Verified, and not
 
 - Verified (the core's harness, PHP 8.4): a search and its parameters, statuses, price range and

@@ -1,0 +1,52 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "ticketmaster",
+    "rateLimits": [
+        {
+            "max": 5000,
+            "window": "day",
+            "scope": "key",
+            "operations": [],
+            "note": "\"a default quota of 5000 API calls per day\" (Getting started), per API key; raised case by case once the application is verified."
+        },
+        {
+            "max": 5,
+            "window": "second",
+            "scope": "key",
+            "operations": [],
+            "note": "\"rate limitation of 5 requests per second\" (Getting started)."
+        }
+    ],
+    "rights": {
+        "commercial": "forbidden",
+        "openSourceRequired": null,
+        "caching": {
+            "permission": "allowed",
+            "maxTtl": null
+        },
+        "storage": "forbidden",
+        "redistribution": "forbidden",
+        "attribution": {
+            "required": false,
+            "text": null,
+            "url": null,
+            "where": []
+        },
+        "licence": null
+    },
+    "requirements": {
+        "key": true,
+        "userAgent": {
+            "required": false,
+            "pattern": null
+        }
+    },
+    "provenance": {
+        "terms": "https://developer.ticketmaster.com/support/terms-of-use/",
+        "policy": "https://developer.ticketmaster.com/products-and-docs/apis/getting-started/",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer",
+        "contact": null,
+        "notes": "Terms of Use last updated 2023-06-27. Commercial: \"derive revenues from the use or provision of the Ticketmaster API, whether for direct commercial or monetary gain or otherwise\" is forbidden \"except as set forth below\", and no exception follows (an affiliate agreement, if any, is a contract of its own: not read). Caching: Event Content may be cached or stored \"for reasonable periods in order to provide the service\", no time given: caching allowed, storage beyond it forbidden; content its owner asks to remove goes within 24 hours. Redistribution: the licence is non-sublicensable and non-transferable, the API may not be sold, leased or sublicensed. Calls not primarily in response to direct user actions may be rate limited or blocked. Each call counts one listing, not its pages; the Discovery API pages no deeper than the 1,000th result (as the package's docs read it on 2026-10-24; not re-read). The terms ask no attribution; the branding guide the Getting started page names answered 404 on 2026-11-10: attribution not declared. Over quota: 429, errorcode policies.ratelimit.QuotaViolation; the Rate-Limit, Rate-Limit-Available, Rate-Limit-Over and Rate-Limit-Reset headers are Ticketmaster's own, not read."
+    }
+}
