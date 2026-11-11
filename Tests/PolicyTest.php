@@ -97,6 +97,29 @@ final class PolicyTest extends TestCase
         $registry->catalog('box');
     }
 
+    public function testEachFurtherPageIsCountedAndOneOverTheLimitNeverRequested(): void
+    {
+        $http = new RecordedHttpClient(static function (string $method, string $url, array $options): array {
+            $query = \is_array($options['query'] ?? null) ? $options['query'] : [];
+            $page = is_numeric($query['page'] ?? null) ? (int) $query['page'] : 0;
+
+            return [200, (string) json_encode(['_embedded' => ['events' => array_map(static fn (int $i) => ['id' => 'e'.$i, 'name' => 'E', 'dates' => ['start' => ['dateTime' => '2099-01-01T00:00:00Z']]], range($page * 50, $page * 50 + 49))], 'page' => ['size' => 50, 'totalPages' => 10, 'number' => $page]])];
+        });
+        $registry = self::registry($http, ['rateLimits' => [['max' => 3, 'window' => 'day', 'operations' => ['events']]]]);
+
+        $read = 0;
+        try {
+            foreach ($registry->catalog('box')->events() as $event) {
+                ++$read;
+            }
+            self::fail('The fourth page went out over the limit.');
+        } catch (UsageLimitReachedException $e) {
+            self::assertSame('3/day/application/events', $e->limit?->id());
+        }
+        self::assertSame(150, $read, 'three pages: the registry\'s call and two counted by the provider');
+        self::assertCount(3, $http->requests, 'the fourth never requested');
+    }
+
     /** @param array<string, mixed> $policy */
     private static function registry(RecordedHttpClient $http, array $policy = []): Registry
     {

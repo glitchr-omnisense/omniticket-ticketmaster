@@ -2,6 +2,7 @@
 
 namespace Omniticket\Ticketmaster;
 
+use Omnisense\Contracts\Policy\UsagePolicy;
 use Omniticket\Config;
 use Omniticket\Exception\InvalidConfigException;
 use Omniticket\ProviderFactory;
@@ -50,6 +51,7 @@ final class TicketmasterFactory extends ProviderFactory
             $filters,
             rtrim($c->string('url') ?? 'https://app.ticketmaster.com/discovery/v2', '/'),
             backoff: $c->backoff(),
+            pages: $c->guard(UsagePolicy::fromFile(TicketmasterProvider::POLICY)),
         );
     }
 }

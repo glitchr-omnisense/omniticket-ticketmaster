@@ -4,6 +4,7 @@ namespace Omniticket\Ticketmaster;
 
 use Omnisense\Contracts\Policy\Backoff;
 use Omnisense\Contracts\Policy\DeclaresUsagePolicyInterface;
+use Omnisense\Contracts\Policy\PolicyGuard;
 use Omnisense\Contracts\Policy\UsagePolicy;
 use Omniticket\Capabilities;
 use Omniticket\EventCatalogInterface;
@@ -42,6 +43,8 @@ final class TicketmasterProvider implements EventCatalogInterface, DeclaresUsage
         private readonly array $filters = [],
         private readonly string $url = 'https://app.ticketmaster.com/discovery/v2',
         ?Backoff $backoff = null,
+        /** the provider's guard for a search's further pages (Config::guard()); null: not counted */
+        private readonly ?PolicyGuard $pages = null,
     ) {
         $this->api = new JsonApi($http, 'Ticketmaster', $backoff);
     }
@@ -101,7 +104,9 @@ final class TicketmasterProvider implements EventCatalogInterface, DeclaresUsage
     private function search(array $search): \Generator
     {
         for ($page = 0; ($page + 1) * self::SIZE <= self::DEEPEST; ++$page) {
-            $answer = $this->get('/events.json', $search + ['page' => (string) $page], 'the events');
+            // The first page is the registry's call of "events"; each further one is checked before it is requested.
+            $fetch = fn (): Data => $this->get('/events.json', $search + ['page' => (string) $page], 'the events');
+            $answer = 0 === $page || null === $this->pages ? $fetch() : $this->pages->call('events', $fetch);
             foreach ($answer->list('_embedded.events') as $event) {
                 yield $this->toEvent($event);
             }
