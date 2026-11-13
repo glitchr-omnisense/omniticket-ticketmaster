@@ -5,6 +5,37 @@ PHP host: public events from the Discovery API - dates, venue, price range, sale
 purchase link. A catalogue, read only: the tickets are Ticketmaster's, bought at the event's
 `url`; there are no attendees and no check.
 
+## Install and a first call
+
+```sh
+composer require omniticket/ticketmaster
+```
+
+No account for this first call: the Discovery API's answer is recorded
+(`Omniticket\Testing\RecordedHttpClient` answers in place of the API), so nothing leaves the process.
+A real call needs an API key: a free app on developer.ticketmaster.com.
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omniticket\Testing\RecordedHttpClient;
+use Omniticket\Ticketmaster\TicketmasterFactory;
+
+// The Discovery API's answer, recorded: nothing sent. HttpClient::create() (symfony/http-client) for a real call.
+$http = RecordedHttpClient::routes([
+    'GET /events.json' => '{"_embedded": {"events": [{"name": "Example Band - World Tour", "id": "vvG1zZ9KbqA0Ex", "url": "https://www.ticketmaster.fr/fr/manifestation/example-band-billet/idmanif/000000", "dates": {"start": {"localDate": "2036-06-20", "localTime": "20:00:00", "dateTime": "2036-06-20T18:00:00Z"}, "timezone": "Europe/Paris", "status": {"code": "onsale"}}, "priceRanges": [{"currency": "EUR", "min": 45.5, "max": 89.0}]}]}, "page": {"size": 50, "totalElements": 1, "totalPages": 1, "number": 0}}',
+]);
+$ticketmaster = (new TicketmasterFactory($http))->create(['api_key' => 'recorded', 'country_code' => 'FR']);
+
+foreach ($ticketmaster->events() as $event) {
+    echo $event->title, ' ', $event->start?->format('d/m/Y H:i'), ' ', $event->url, "\n";   // Example Band - World Tour 20/06/2036 18:00 (UTC) https://www.ticketmaster.fr/...
+}
+```
+
+With your key, through the family's registry:
+
 ```php
 use Omniticket\Registry;
 use Omniticket\Ticketmaster\TicketmasterFactory;
